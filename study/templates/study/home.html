@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Teach Me</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; color: #1f2328; }
+    .badge { display: inline-block; padding: .2rem .6rem; border-radius: 999px; background: #eef2ff; color: #3730a3; font-size: .85rem; }
+    label { display: block; font-weight: 600; margin-top: 1rem; }
+    input[type=text], textarea { width: 100%; padding: .5rem; font: inherit; box-sizing: border-box; }
+    .errors { color: #b42318; }
+    .ok { color: #067647; font-weight: 600; }
+    button { margin-top: 1rem; padding: .6rem 1.2rem; font: inherit; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Teach Me</h1>
+  <span class="badge">DEMO · дайын мысал</span>
+  <p>Режим: <strong>{{ mode|upper }}</strong></p>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="errors">{{ form.non_field_errors }}</div>{% endif %}
+    {% for field in form %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}
+    {% endfor %}
+    <button type="submit">Карточкалар жасау</button>
+  </form>
+
+  <h2>Сақталған конспекттер</h2>
+  {% if sources %}
+    <ul>
+      {% for source in sources %}
+        <li><a href="{% url 'source_detail' source.pk %}">{{ source.title }}</a> · {{ source.generation_mode|upper }} · {{ source.created_at|date:"Y-m-d H:i" }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Әзірге сақталған конспект жоқ.</p>
+  {% endif %}
+</body>
+</html>
